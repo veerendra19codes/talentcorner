@@ -1,0 +1,22 @@
+import { NextResponse } from "next/server";
+import { connectToDB } from "@/lib/connectToDB"
+import models from "@/lib/models.js"
+const User = models.User; 
+
+export const dynamic = "force-dynamic";
+
+export const GET = async (request) => {
+
+    try {
+        connectToDB();
+
+        const users = await User.find({},{ password: 0});
+        // console.log("all users:", users);
+        
+        return NextResponse.json(users);
+    }
+    catch(err) {
+        // console.log("failed to get a user from db", err);
+        return NextResponse.json(err);
+    }
+}
