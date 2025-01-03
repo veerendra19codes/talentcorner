@@ -54,129 +54,6 @@ const EditPage = () => {
         }
     }, [session, status, router]);
 
-    // const getUsers = async () => {
-    //     // console.log("getusers called")
-    //     try {
-    //         setLoading(true);
-
-    //         const res = await axios.get(`${process.env.NEXTAUTH_URL}/api/user`);
-    //         // console.log("res:", res);
-    //         if (res.status === 200 || res.status === 201) {
-    //             const allusers = res.data;
-    //             setUsers(allusers);
-
-    //             const allbds = allusers?.filter((u) => u?.role === "bd");
-    //             setBds(allbds);
-    //             // console.log("allbds:", allbds);
-
-    //             const alltls = allusers?.filter((u) => u?.role === "tl");
-    //             setTls(alltls);
-    //             // console.log("alltls:", alltls);
-
-    //             const allshs = allusers?.filter((u) => u?.role === "sh");
-    //             setShs(allshs);
-    //             // console.log("allshs:", allshs);
-
-    //             const allads = allusers?.filter((u) => u?.role === "ad");
-    //             setAds(allads);
-    //             // console.log("allads:", allads);
-
-    //             // setError("")
-    //             setLoading(false);
-
-    //         }
-    //         else {
-    //             // setError("please wait");
-    //             setLoading(false);
-    //         }
-    //     }
-    //     catch (err) {
-    //         // setError("no data found");
-    //         setLoading(false);
-    //         // console.log("error in getting all users:", err);
-    //     }
-    // }
-
-    const getUsers = async () => {
-        try {
-            const response = await axios.get(`${process.env.NEXTAUTH_URL}/api/user`);
-            // console.log("response:", response);
-            const allusers = response.data;
-            setUsers(allusers);
-
-            const allbds = allusers?.filter((u) => u?.role === "bd");
-            setBds(allbds);
-            // console.log("allbds:", allbds);
-
-            const alltls = allusers?.filter((u) => u?.role === "tl");
-            setTls(alltls);
-            // console.log("alltls:", alltls);
-
-            const allshs = allusers?.filter((u) => u?.role === "sh");
-            setShs(allshs);
-            // console.log("allshs:", allshs);
-
-            const allads = allusers?.filter((u) => u?.role === "ad");
-            setAds(allads);
-            // console.log("allads:", allads);
-
-        } catch (error) {
-            // console.error("Error fetching users:", error);
-            setLoading(false);
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    useEffect(() => {
-        getUsers();
-    }, []);
-
-    const selectRole = (e) => {
-        setUserDetails({});
-        setSelectedBD("");
-        setSelectedSH("");
-        setSelectedTL("");
-        setSelectedFR("");
-        setSelectedRole(e.target.value);
-
-    };
-
-    const SelectAD = (e) => {
-        setUserDetails({});
-        setSelectedAD(e.target.value);
-        // console.log("selectedBD in selectBD fn:", selectedBD);
-    };
-
-    const SelectBD = (e) => {
-        setUserDetails({});
-        setSelectedBD(e.target.value);
-        // console.log("selectedBD in selectBD fn:", selectedBD);
-    };
-
-    const SelectSH = (e) => {
-        setUserDetails({});
-        setSelectedSH(e.target.value);
-        // console.log("selectedSH in selectSH fn:", selectedSH);
-    };
-
-
-    const SelectTL = (e) => {
-        setUserDetails({});
-        setFrs([]);
-        // console.log("userdetails:", userdetails);
-
-        setSelectedFR("");
-        setSelectedTL(e.target.value);
-        // console.log("selectedTL in selectTL fn:", selectedTL);
-    };
-
-    //selectFR
-    const handleSelectChange = (selectedValue) => {
-        setUserDetails({});
-        setSelectedFR(selectedValue);
-    }
-
     useEffect(() => {
         setUserDetails({});
         setSelectedAD("");
@@ -184,8 +61,41 @@ const EditPage = () => {
         setSelectedSH("");
         setSelectedTL("");
         setSelectedFR("");
+    }, [selectedRole]);
 
-    }, [selectedRole])
+    useEffect(() => {
+        const getUsers = async () => {
+            try {
+                const response = await axios.get(`${process.env.NEXTAUTH_URL}/api/user`);
+                // console.log("response:", response);
+                const allusers = response.data;
+                setUsers(allusers);
+
+                const allbds = allusers?.filter((u) => u?.role === "bd");
+                setBds(allbds);
+                // console.log("allbds:", allbds);
+
+                const alltls = allusers?.filter((u) => u?.role === "tl");
+                setTls(alltls);
+                // console.log("alltls:", alltls);
+
+                const allshs = allusers?.filter((u) => u?.role === "sh");
+                setShs(allshs);
+                // console.log("allshs:", allshs);
+
+                const allads = allusers?.filter((u) => u?.role === "ad");
+                setAds(allads);
+                // console.log("allads:", allads);
+
+            } catch (error) {
+                // console.error("Error fetching users:", error);
+                setLoading(false);
+            } finally {
+                setLoading(false);
+            }
+        };
+        getUsers();
+    }, []);
 
     useEffect(() => {
         // console.log("selectedRole in first useEffect:", selectedRole);
@@ -282,12 +192,55 @@ const EditPage = () => {
             fetchuserdetails();
         }
 
-    }, [selectedRole, selectedAD, selectedSH, selectedBD, selectedTL, selectedFR, setUsers]);
+    }, [selectedRole, selectedAD, selectedSH, selectedBD, selectedTL, selectedFR, setUsers, frs.length, tls.length, users]);
+
+    const selectRole = (e) => {
+        setUserDetails({});
+        setSelectedBD("");
+        setSelectedSH("");
+        setSelectedTL("");
+        setSelectedFR("");
+        setSelectedRole(e.target.value);
+    };
+
+    const SelectAD = (e) => {
+        setUserDetails({});
+        setSelectedAD(e.target.value);
+        // console.log("selectedBD in selectBD fn:", selectedBD);
+    };
+
+    const SelectBD = (e) => {
+        setUserDetails({});
+        setSelectedBD(e.target.value);
+        // console.log("selectedBD in selectBD fn:", selectedBD);
+    };
+
+    const SelectSH = (e) => {
+        setUserDetails({});
+        setSelectedSH(e.target.value);
+        // console.log("selectedSH in selectSH fn:", selectedSH);
+    };
+
+    const SelectTL = (e) => {
+        setUserDetails({});
+        setFrs([]);
+        // console.log("userdetails:", userdetails);
+
+        setSelectedFR("");
+        setSelectedTL(e.target.value);
+        // console.log("selectedTL in selectTL fn:", selectedTL);
+    };
+
+    //selectFR
+    const handleSelectChange = (selectedValue) => {
+        setUserDetails({});
+        setSelectedFR(selectedValue);
+    }
 
     return (
         <>
-            {loading && <div className="text-white min-h-screen">Loading...</div>}
-            {!loading &&
+            {loading ?
+                <div className="text-white min-h-screen">Loading...</div> :
                 <div className="w-full min-h-screen flex flex-col justify-start items-center text-white py-4 gap-4 lg:px-4 pb-24">
 
                     <div className="flex lg:flex-col justify-center items-center gap-4 lg:gap-2 w-full">
